@@ -13,10 +13,23 @@ namespace ASP.NET_MVC_E_Ticaret.Controllers
     public class ProductController : Controller
     {
         private MyContext db = new MyContext();
-        public ActionResult List()
+        public PartialViewResult FeaturedProductList()
         {
-            var products = db.Products.Where(i => i.isApproved == true).ToList();
-            return View(products);
+            var products = db.Products.Where(i => i.isApproved == true&&i.isFeatured==true).Take(5).ToList();
+            return PartialView(products);
+        }
+        public ActionResult List(string q)
+        {
+            var products = db.Products.Where(i => i.isApproved == true);
+
+            if (!string.IsNullOrEmpty(q))
+            {
+                q = q.ToLower();
+                products = products.Where(x => x.Name.ToLower().Contains(q)||x.Description.ToLower().Contains(q));
+            }
+
+            
+            return View(products.ToList());
         }
         // GET: Product
         public ActionResult Index()

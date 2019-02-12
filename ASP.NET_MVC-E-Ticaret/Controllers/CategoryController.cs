@@ -19,6 +19,15 @@ namespace ASP.NET_MVC_E_Ticaret.Controllers
         {
             return View(db.Categories.ToList());
         }
+        public PartialViewResult CategoryMenu()
+        {
+            var kategoriler = db.Categories.Select(x => new CategoryViewModel() {
+                Id=x.Id,
+                Name=x.Name,
+                Count=x.Products.Count()
+            }).ToList();
+            return PartialView(kategoriler);
+        }
 
         // GET: Category/Details/5
         public ActionResult Details(int? id)
